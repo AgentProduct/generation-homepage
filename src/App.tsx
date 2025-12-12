@@ -50,6 +50,16 @@ const works = [
     url: "https://github.com/OFEXJS/Utility.git",
     cover: "",
   },
+  {
+    title: "lineage-datahub",
+    desc: "抽离开源项目 DataHub 的血缘交互组件",
+    url: "https://github.com/IDEADEMOX/lineage-datahub.git",
+  },
+  {
+    title: "data-lineage-ui",
+    desc: "抽离开源项目 open-mate-data 的数据血缘呈现组件",
+    url: "https://github.com/IDEADEMOX/data-lineage-ui.git",
+  },
 ];
 
 // 文章数据（测试数据）
