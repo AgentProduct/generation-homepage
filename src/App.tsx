@@ -20,7 +20,7 @@ const me = {
     },
     {
       name: "Email",
-      url: "15879398507@163.com",
+      url: "mailto:zhengjialu8507@gmail.com",
       icon: "/icons/Gmail.svg",
     },
   ],
