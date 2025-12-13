@@ -81,8 +81,17 @@ type instanceItem = {
   tags: string[];
   url: string;
   icon?: string;
-  status: 'online' | 'offline' | 'development';
+  status: 'online' | 'offline' | 'development' | 'updated' | 'upcoming';
 }
+// 状态标签映射
+const instanceStatusMap = {
+  'online': '在线',
+  'offline': '离线', 
+  'development': '开发中',
+  'updated': '持续更新中',
+  'upcoming': '即将推出'
+};
+
 // 实例数据（测试数据）
 const instances = [
   {
@@ -90,9 +99,18 @@ const instances = [
     title: '代码在线编辑器',
     description: '支持 Javascript、Python 实时代码编辑和运行',
     tags: ['Javascript', 'Python', 'Node.js'],
-    url: 'https://zhengjialux.github.io/CodePlayground/index.html',
+    url: 'https://zhengjialux.github.io/Entry/CodePlayground/index.html',
     icon: '/icons/JPCodePlayground.svg',
     status: 'online' as const
+  },
+  {
+    id: 2,
+    title: 'React 组件库',
+    description: '展示各种可复用UI组件示例',
+    tags: ['React', '组件', 'UI', 'Typescript'],
+    url: 'https://zhengjialux.github.io/Entry/ExampleGalleryTR/index.html',
+    icon: '/icons/ExampleGalleryTR.svg',
+    status: 'updated' as const
   },
 ] as instanceItem[];
 
@@ -174,8 +192,7 @@ const App: React.FC = () => {
                   )}
                   <h3 className="instance-title">{instance.title}</h3>
                   <span className={`instance-status ${instance.status}`}>
-                    {instance.status === 'online' ? '在线' : 
-                     instance.status === 'offline' ? '离线' : '开发中'}
+                    {instanceStatusMap[instance.status]}
                   </span>
                 </div>
                 <p className="instance-description">{instance.description}</p>
