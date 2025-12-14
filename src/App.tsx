@@ -106,10 +106,19 @@ const instances = [
   {
     id: 2,
     title: 'React 组件库',
-    description: '展示各种可复用UI组件示例',
+    description: '展示各种可复用React UI组件示例',
     tags: ['React', '组件', 'UI', 'Typescript'],
     url: 'https://zhengjialux.github.io/Entry/ExampleGalleryTR/index.html',
     icon: '/icons/ExampleGalleryTR.svg',
+    status: 'updated' as const
+  },
+  {
+    id: 3,
+    title: 'Vue 组件库',
+    description: '展示各种可复用Vue UI组件示例',
+    tags: ['Vue', '组件', 'UI', 'Typescript'],
+    url: 'https://zhengjialux.github.io/Entry/ExampleGalleryTV/index.html',
+    icon: '/icons/ExampleGalleryTV.svg',
     status: 'updated' as const
   },
 ] as instanceItem[];
