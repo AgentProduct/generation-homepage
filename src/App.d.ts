@@ -38,4 +38,4 @@ export type linksItem = {
   name: string;
   url: string;
   icon: string;
-}[];
+};
