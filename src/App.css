@@ -208,22 +208,92 @@ body {
   border-bottom-right-radius: 20px;
   box-shadow: 20px 0 40px rgba(0, 0, 0, 0.3);
   z-index: 20;
-  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
   display: flex;
   flex-direction: column;
   overflow: hidden;
+  will-change: transform, opacity, box-shadow;
 }
 
 .instances-drawer.open {
   transform: translateX(0);
+  opacity: 1;
+  box-shadow: 20px 0 60px rgba(120, 120, 255, 0.15);
+  transition: all 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94);
 }
 
 .instances-drawer.closed {
   transform: translateX(-340px);
+  opacity: 0.8;
+  box-shadow: 20px 0 20px rgba(0, 0, 0, 0.1);
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-.instances-drawer:hover {
-  box-shadow: 20px 0 60px rgba(120, 120, 255, 0.15);
+/* 抽屉内容区域延迟动画 */
+.instances-content {
+  transition: all 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  transform-origin: left center;
+}
+
+.instances-drawer.open .instances-content {
+  opacity: 1;
+  transform: translateX(0);
+  transition-delay: 0.1s;
+}
+
+.instances-drawer.closed .instances-content {
+  opacity: 0;
+  transform: translateX(-20px);
+  transition-delay: 0s;
+}
+
+/* 实例卡片逐个出现动画 */
+.instance-card {
+  opacity: 0;
+  transform: translateX(-30px) scale(0.95);
+  transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+
+.instances-drawer.open .instance-card {
+  opacity: 1;
+  transform: translateX(0) scale(1);
+}
+
+.instances-drawer.open .instance-card:nth-child(1) { transition-delay: 0.15s; }
+.instances-drawer.open .instance-card:nth-child(2) { transition-delay: 0.20s; }
+.instances-drawer.open .instance-card:nth-child(3) { transition-delay: 0.25s; }
+.instances-drawer.open .instance-card:nth-child(4) { transition-delay: 0.30s; }
+.instances-drawer.open .instance-card:nth-child(5) { transition-delay: 0.35s; }
+.instances-drawer.open .instance-card:nth-child(6) { transition-delay: 0.40s; }
+.instances-drawer.open .instance-card:nth-child(7) { transition-delay: 0.45s; }
+.instances-drawer.open .instance-card:nth-child(8) { transition-delay: 0.50s; }
+
+.instances-drawer.closed .instance-card {
+  opacity: 0;
+  transform: translateX(-20px) scale(0.98);
+  transition-delay: 0s !important;
+}
+
+/* 抽屉标题延迟动画 */
+.drawer-title {
+  opacity: 0;
+  transform: translateY(-10px);
+  transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+
+.instances-drawer.open .drawer-title {
+  opacity: 1;
+  transform: translateY(0);
+  transition-delay: 0.05s;
+}
+
+.instances-drawer.closed .drawer-title {
+  opacity: 0;
+  transform: translateY(-5px);
+  transition-delay: 0s;
+}
+
+.instances-drawer.open:hover {
+  box-shadow: 20px 0 80px rgba(120, 120, 255, 0.25);
 }
 
 /* 抽屉头部 */
@@ -695,6 +765,10 @@ body {
   position: absolute;
 }
 
+.section-title.slow {
+  transition: all 1s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
 .articles-section.collapsed .section-title:not(.hidden) {
   display: none;
 }
@@ -711,6 +785,7 @@ body {
   text-align: center;
   position: relative;
   padding-bottom: 12px;
+  min-width: 120px;
 }
 
 .section-title::after {
@@ -920,6 +995,7 @@ body {
   color: rgba(255, 255, 255, 0.7);
   margin: 0 0 8px 0;
   letter-spacing: 0.5px;
+  min-width: 200px;
 }
 
 .no-articles-content p {
@@ -928,6 +1004,7 @@ body {
   margin: 0;
   line-height: 1.5;
   font-style: italic;
+  min-width: 200px;
 }
 
 /* 响应式设计 */
@@ -957,6 +1034,13 @@ body {
   .instances-drawer.closed {
     transform: translateX(-280px);
   }
+
+  .instances-drawer.open .instance-card:nth-child(1) { transition-delay: 0.10s; }
+  .instances-drawer.open .instance-card:nth-child(2) { transition-delay: 0.15s; }
+  .instances-drawer.open .instance-card:nth-child(3) { transition-delay: 0.20s; }
+  .instances-drawer.open .instance-card:nth-child(4) { transition-delay: 0.25s; }
+  .instances-drawer.open .instance-card:nth-child(5) { transition-delay: 0.30s; }
+  .instances-drawer.open .instance-card:nth-child(6) { transition-delay: 0.35s; }
 }
 
 @media (max-width: 768px) {
@@ -1042,6 +1126,13 @@ body {
   .instances-drawer.closed {
     transform: translateX(-240px);
   }
+
+  /* 移动端更短的延迟动画 */
+  .instances-drawer.open .instance-card:nth-child(1) { transition-delay: 0.05s; }
+  .instances-drawer.open .instance-card:nth-child(2) { transition-delay: 0.08s; }
+  .instances-drawer.open .instance-card:nth-child(3) { transition-delay: 0.11s; }
+  .instances-drawer.open .instance-card:nth-child(4) { transition-delay: 0.14s; }
+  .instances-drawer.open .instance-card:nth-child(5) { transition-delay: 0.17s; }
 
   .drawer-header {
     padding: 16px;

@@ -439,7 +439,7 @@ const App: React.FC = () => {
             </span>
           </button>
           <h2
-            className={`section-title ${isArticlesCollapsed ? "hidden" : ""}`}
+            className={`section-title ${isArticlesCollapsed ? "hidden" : "slow"}`}
           >
             最新文章
           </h2>
