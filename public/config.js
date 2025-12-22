@@ -104,15 +104,14 @@ const config = {
   ],
   // 文章数据
   articles: [
-    // {
-    //   id: 1,
-    //   title: "React 组件库最佳实践",
-    //   excerpt:
-    //     "探索如何构建高效、可复用的 React UI 组件库，包括 Typescript 支持和主题化。",
-    //   date: "2025-12-01",
-    //   category: "前端开发",
-    //   readTime: "8 min",
-    //   url: "/blog/Test.md", // 示例 Markdown 文件
-    // },
+    {
+      id: 1,
+      title: "Never give up",
+      excerpt: "不抛弃心中的梦想，不放弃脚下的坚持，不退缩于眼前的困难。",
+      date: "2025-12-22",
+      category: "励志",
+      readTime: "8 min",
+      url: "/blog/never-give-up.md",
+    },
   ],
 };
