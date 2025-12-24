@@ -81,6 +81,15 @@ const config = {
     },
     {
       id: 3,
+      title: "图片处理工具",
+      description: "对图片进行处理，例如转换、压缩等",
+      tags: ["工具", "转换", "图片处理"],
+      url: "/Entry/ImageAIProcessing/",
+      icon: "/icons/ImageAIProcessing.png",
+      status: "online",
+    },
+    {
+      id: 4,
       title: "React 组件库",
       description: "展示各种可复用React UI组件示例",
       tags: ["React", "组件", "UI", "Typescript"],
@@ -89,7 +98,7 @@ const config = {
       status: "updated",
     },
     {
-      id: 4,
+      id: 5,
       title: "Vue 组件库",
       description: "展示各种可复用Vue UI组件示例",
       tags: ["Vue", "组件", "UI", "Typescript"],
@@ -98,7 +107,7 @@ const config = {
       status: "updated",
     },
     {
-      id: 5,
+      id: 6,
       title: "报表可视化分析工具",
       description: "交互式数据报表可视化分析工具",
       tags: ["数据可视化", "报表", "分析", "图表"],
