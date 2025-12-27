@@ -112,7 +112,7 @@ const config = {
       description: "颜色选择器，颜色值转换功能",
       tags: ["工具", "转换", "色彩取值"],
       url: "/Entry/ColorPanel/",
-      icon: "/icons/ColorPanel.png",
+      icon: "/icons/ColorPanel.svg",
       status: "online",
     },
     {
