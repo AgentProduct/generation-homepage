@@ -59,7 +59,7 @@ brew install openresty/brew/openresty
 # 做国际化网站，需要多语言/多地区（自动切换语言、货币）。
 # ====
 
-# 如果不需要使用 GeoIP 定位功能，可在安装时暂时绕开安装 GeoIP 库。
+# 先绕开安装 GeoIP 库，如果需要使用 GeoIP 定位功能，后续再手动安装新的 GeoIP 库。
 # 临时绕开 GeoIP 库安装，只需要在安装命令中添加 `--without-geoip` 参数即可。
 
 $ brew install openresty --without-geoip
