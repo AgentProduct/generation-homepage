@@ -29,12 +29,41 @@ openresty 的核心：
 
 !['download'](/blog/openresty/images/img1.png)
 
-### 安装 openresty（Windows 为例）
+### 安装 openresty
+
+1. Windows 安装
 
 Windows 提供 win32 和 win64 两个版本的安装包，根据自己的系统选择下载。
 下载安装包后，解压到自己选择的目录。
 
 例如，我解压到 `D:\openresty` 目录。
+
+2. Linux 安装
+
+Linux 提供了 RPM 和 DEB 安装包，根据自己的系统选择下载。
+下载安装包后，使用 `yum` 或 `apt` 安装即可。
+
+Linux 各发行版本的安装步骤官方参考：https://openresty.org/cn/linux-packages.html
+
+3. Mac 安装
+
+```bash
+brew install openresty/brew/openresty
+
+# 遇到 GeoIP 模块错误：error: the GeoIP module requires the GeoIP library.
+# GeoIP 模块是 MaxMind 的旧版 GeoIP Legacy 库，已经多年不再更新，openresty 默认安装时会依赖该库。
+
+# ====
+# GeoIP 库主要用于:
+# 根据 IP 地址定位用户的物理位置，实现地区访问限制（如不允许某些国家用户访问某些内容）。
+# 做国际化网站，需要多语言/多地区（自动切换语言、货币）。
+# ====
+
+# 如果不需要使用 GeoIP 定位功能，可在安装时暂时绕开安装 GeoIP 库。
+# 临时绕开 GeoIP 库安装，只需要在安装命令中添加 `--without-geoip` 参数即可。
+
+$ brew install openresty --without-geoip
+```
 
 ### 启动 openresty
 
@@ -45,7 +74,13 @@ linux 下启动 openresty 命令如下：
 
 ```bash
 $ cd /usr/local/openresty/bin/
-$ ./openresty
+$ ./openresty -v
+```
+
+mac 下启动 openresty 命令如下：
+
+```bash
+$ openresty -v
 ```
 
 ### 命令行操作
