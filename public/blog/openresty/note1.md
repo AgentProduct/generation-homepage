@@ -125,7 +125,7 @@ $ openresty -s reopen      # 重新打开日志文件
 # 指定 openresty 配置文件路径
 $ openresty -c /usr/local/my-service/conf/my.conf
 # 指定 openresty 工作目录
-$ openresty -p /usr/local/openresty/bin/
+$ openresty -p /usr/local/my-service/
 # 设置错误日志文件
 $ openresty -e /usr/local/my-service/logs/error.log
 ```
@@ -133,14 +133,16 @@ $ openresty -e /usr/local/my-service/logs/error.log
 Linux 例子：
 
 ```bash
+# 注意：使用 -c 的同时 -p 也要指定，防止其他的配置（日志）错乱。
 # 测试 openresty 配置文件是否正确
-$ openresty -t -c ~/my-service/conf/my.conf
+$ openresty -t -p ~/my-service/ -c ~/my-service/conf/my.conf
 # 启动 openresty
-$ openresty -c ~/my-service/conf/my.conf
+$ openresty -p ~/my-service/ -c ~/my-service/conf/my.conf
 # 查看 openresty 进程
 $ ps -ef | grep openresty
 # 发送信号给 openresty 进程
-$ openresty -s stop -c ~/my-service/conf/my.conf     # 快速停止
-$ openresty -s quit -c ~/my-service/conf/my.conf     # 优雅停止
-$ openresty -s reload -c ~/my-service/conf/my.conf   # 重新加载配置
+$ openresty -s stop -p ~/my-service/ -c ~/my-service/conf/my.conf     # 快速停止
+$ openresty -s quit -p ~/my-service/ -c ~/my-service/conf/my.conf     # 优雅停止
+$ openresty -s reload -p ~/my-service/ -c ~/my-service/conf/my.conf   # 重新加载配置
 ```
+
