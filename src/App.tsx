@@ -42,7 +42,7 @@ const App: React.FC = () => {
   );
   const [markdownContent, setMarkdownContent] = useState<string>("");
   const [isLoading, setIsLoading] = useState(false);
-  
+
   // 文章筛选和排序状态
   const [selectedCategory, setSelectedCategory] = useState<string>("全部");
   const [sortOrder, setSortOrder] = useState<"desc" | "asc">("desc");
@@ -54,14 +54,18 @@ const App: React.FC = () => {
     : -1;
 
   const prevArticle = currentIndex > 0 ? articles[currentIndex - 1] : null;
-  const nextArticle = currentIndex < articles.length - 1 ? articles[currentIndex + 1] : null;
-  
+  const nextArticle =
+    currentIndex < articles.length - 1 ? articles[currentIndex + 1] : null;
+
   // 获取所有分类
-  const categories = ["全部", ...Array.from(new Set(articles.map(article => article.category)))];
-  
+  const categories = [
+    "全部",
+    ...Array.from(new Set(articles.map((article) => article.category))),
+  ];
+
   // 将 readTime (HH:MM) 转换为总分钟数以便比较
   const convertReadTimeToMinutes = (readTime: string): number => {
-    const [hours, minutes] = readTime.split(':').map(Number);
+    const [hours, minutes] = readTime.split(":").map(Number);
     return hours * 60 + minutes;
   };
 
@@ -69,33 +73,37 @@ const App: React.FC = () => {
   const filteredAndSortedArticles = React.useMemo(() => {
     // 筛选
     let result = articles;
-    
+
     // 分类筛选
     if (selectedCategory !== "全部") {
-      result = result.filter(article => article.category === selectedCategory);
+      result = result.filter(
+        (article) => article.category === selectedCategory
+      );
     }
-    
+
     // 搜索关键词筛选
     if (searchKeyword.trim()) {
       const keyword = searchKeyword.trim().toLowerCase();
-      result = result.filter(article => 
+      result = result.filter((article) =>
         article.title.toLowerCase().includes(keyword)
       );
     }
-    
+
     // 排序
     return [...result].sort((a, b) => {
       const dateA = new Date(a.date);
       const dateB = new Date(b.date);
       const timeDiff = dateB.getTime() - dateA.getTime();
-      
+
       // 如果日期相同，则根据 readTime 排序
       if (timeDiff === 0) {
         const readTimeA = convertReadTimeToMinutes(a.readTime);
         const readTimeB = convertReadTimeToMinutes(b.readTime);
-        return sortOrder === "desc" ? readTimeB - readTimeA : readTimeA - readTimeB;
+        return sortOrder === "desc"
+          ? readTimeB - readTimeA
+          : readTimeA - readTimeB;
       }
-      
+
       return sortOrder === "desc" ? timeDiff : -timeDiff;
     });
   }, [articles, selectedCategory, sortOrder, searchKeyword]);
@@ -476,7 +484,9 @@ const App: React.FC = () => {
             title={isArticlesCollapsed ? "展开文章列表" : "收起文章列表"}
           >
             <span
-              className={`toggle-icon ${isArticlesCollapsed ? "collapsed" : ""}`}
+              className={`toggle-icon ${
+                isArticlesCollapsed ? "collapsed" : ""
+              }`}
             >
               <svg
                 width="16"
@@ -489,11 +499,17 @@ const App: React.FC = () => {
             </span>
           </button>
           <h2
-            className={`section-title ${isArticlesCollapsed ? "hidden" : "slow"}`}
+            className={`section-title ${
+              isArticlesCollapsed ? "hidden" : "slow"
+            }`}
           >
             最新文章
           </h2>
-          <div className={`articles-filters ${isArticlesCollapsed ? "collapsed" : ""}`}>
+          <div
+            className={`articles-filters ${
+              isArticlesCollapsed ? "hidden" : "slow"
+            }`}
+          >
             {/* 分类筛选 */}
             <select
               className="filter-select"
@@ -506,7 +522,7 @@ const App: React.FC = () => {
                 </option>
               ))}
             </select>
-            
+
             {/* 排序选择 */}
             <select
               className="filter-select"
@@ -522,7 +538,7 @@ const App: React.FC = () => {
           className={`articles-list ${isArticlesCollapsed ? "collapsed" : ""}`}
         >
           {/* 搜索框 */}
-          <div className={`articles-search ${isArticlesCollapsed ? "collapsed" : ""}`}>
+          <div className="articles-search">
             <input
               type="text"
               className="search-input"
@@ -649,17 +665,20 @@ const App: React.FC = () => {
               {isLoading ? (
                 <div className="loading-spinner">加载中...</div>
               ) : (
-                <ReactMarkdown 
-                  remarkPlugins={[remarkGfm]} 
+                <ReactMarkdown
+                  remarkPlugins={[remarkGfm]}
                   rehypePlugins={[
                     rehypeRaw,
                     rehypeSlug,
-                    [rehypeAutolinkHeadings, {
-                      behavior: "wrap",
-                      properties: {
-                        className: "heading-link"
-                      }
-                    }]
+                    [
+                      rehypeAutolinkHeadings,
+                      {
+                        behavior: "wrap",
+                        properties: {
+                          className: "heading-link",
+                        },
+                      },
+                    ],
                   ]}
                 >
                   {markdownContent}

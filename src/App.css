@@ -709,7 +709,7 @@ body {
 }
 
 /* 确保收起状态下切换按钮始终可见 */
-.articles-section.collapsed .toggle-btn {
+/* .articles-section.collapsed .toggle-btn {
   display: flex !important;
   visibility: visible !important;
   opacity: 1 !important;
@@ -718,7 +718,7 @@ body {
   width: 40px !important;
   height: 40px !important;
   margin: 0 !important;
-}
+} */
 
 /* 切换按钮 */
 .toggle-btn {
@@ -771,7 +771,7 @@ body {
   height: 10px;
 }
 
-.section-title.hidden {
+.section-title.hidden, .articles-filters.hidden {
   opacity: 0;
   transform: translateX(20px);
   pointer-events: none;
