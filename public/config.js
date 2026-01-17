@@ -203,5 +203,14 @@ const config = {
       readTime: "14:45",
       url: "/blog/docker/note1.md",
     },
+    {
+      id: 8,
+      title: "RESTful API",
+      excerpt: "了解 HTTP 协议和 RESTful API 设计模式",
+      date: "2026-01-17",
+      category: "node",
+      readTime: "14:22",
+      url: "/blog/node/note3.md",
+    },
   ],
 };
