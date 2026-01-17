@@ -22,7 +22,7 @@ Node.js 事件循环是一个基于 libuv 事件驱动的循环机制，用于�
 - close callbacks: 执行关闭回调，如 socket.on('close', ...)。
 
 执行步骤：
-```js
+```bash
 while (程序活着) {
   // 1. 执行完上一个阶段后，先清空这两个微任务队列
   执行所有 process.nextTick 回调
@@ -76,7 +76,7 @@ console.log("2");
 
 输出结果：
 
-```
+```bash
 1
 2
 nextTick
@@ -124,7 +124,7 @@ console.log('End');
 ```
 
 输出结果：
-```
+```bash
 Start
 End
 nextTick
