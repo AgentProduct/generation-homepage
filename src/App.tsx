@@ -1,24 +1,17 @@
 import React, { useCallback, useEffect, useRef, useState } from "react";
 import "./App.css";
-import ReactMarkdown from "react-markdown";
-import remarkGfm from "remark-gfm"; // 支持表格、删除线等 GFM 特性
-
-import rehypeRaw from "rehype-raw"; // 支持原始 HTML
-import rehypeSlug from "rehype-slug"; // 为标题添加 ID
-import rehypeAutolinkHeadings from "rehype-autolink-headings"; // 为标题添加锚点链接
+import { Outlet, useNavigate } from "react-router-dom";
 import {
   type worksItem,
   type ArticleItem,
   type InstanceItem,
   type linksItem,
 } from "./App.d";
+import ArticleList from "./components/articles/ArticleList";
 
 const me = config?.me || {};
 
 const works: worksItem[] = config?.works || [];
-
-// 文章数据（新增测试数据，url 指向 Markdown 文件）
-const articles: ArticleItem[] = config?.articles || [];
 
 // 状态标签映射
 const instanceStatusMap = {
@@ -35,78 +28,8 @@ const instances: InstanceItem[] = config?.instances || [];
 
 const App: React.FC = () => {
   const starsContainerRef = useRef<HTMLDivElement>(null);
-  const [isArticlesCollapsed, setIsArticlesCollapsed] = useState(false);
   const [isInstancesDrawerOpen, setIsInstancesDrawerOpen] = useState(false);
-  const [selectedArticle, setSelectedArticle] = useState<ArticleItem | null>(
-    null
-  );
-  const [markdownContent, setMarkdownContent] = useState<string>("");
-  const [isLoading, setIsLoading] = useState(false);
-
-  // 文章筛选和排序状态
-  const [selectedCategory, setSelectedCategory] = useState<string>("全部");
-  const [sortOrder, setSortOrder] = useState<"desc" | "asc">("desc");
-  const [searchKeyword, setSearchKeyword] = useState<string>("");
-
-  // 计算当前文章的上一章和下一章（用于预览标题）
-  const currentIndex = selectedArticle
-    ? articles.findIndex((a) => a.id === selectedArticle.id)
-    : -1;
-
-  const prevArticle = currentIndex > 0 ? articles[currentIndex - 1] : null;
-  const nextArticle =
-    currentIndex < articles.length - 1 ? articles[currentIndex + 1] : null;
-
-  // 获取所有分类
-  const categories = [
-    "全部",
-    ...Array.from(new Set(articles.map((article) => article.category))),
-  ];
-
-  // 将 readTime (HH:MM) 转换为总分钟数以便比较
-  const convertReadTimeToMinutes = (readTime: string): number => {
-    const [hours, minutes] = readTime.split(":").map(Number);
-    return hours * 60 + minutes;
-  };
-
-  // 过滤和排序文章列表
-  const filteredAndSortedArticles = React.useMemo(() => {
-    // 筛选
-    let result = articles;
-
-    // 分类筛选
-    if (selectedCategory !== "全部") {
-      result = result.filter(
-        (article) => article.category === selectedCategory
-      );
-    }
-
-    // 搜索关键词筛选
-    if (searchKeyword.trim()) {
-      const keyword = searchKeyword.trim().toLowerCase();
-      result = result.filter((article) =>
-        article.title.toLowerCase().includes(keyword)
-      );
-    }
-
-    // 排序
-    return [...result].sort((a, b) => {
-      const dateA = new Date(a.date);
-      const dateB = new Date(b.date);
-      const timeDiff = dateB.getTime() - dateA.getTime();
-
-      // 如果日期相同，则根据 readTime 排序
-      if (timeDiff === 0) {
-        const readTimeA = convertReadTimeToMinutes(a.readTime);
-        const readTimeB = convertReadTimeToMinutes(b.readTime);
-        return sortOrder === "desc"
-          ? readTimeB - readTimeA
-          : readTimeA - readTimeB;
-      }
-
-      return sortOrder === "desc" ? timeDiff : -timeDiff;
-    });
-  }, [articles, selectedCategory, sortOrder, searchKeyword]);
+  const navigate = useNavigate();
 
   useEffect(() => {
     const container = starsContainerRef.current;
@@ -140,92 +63,8 @@ const App: React.FC = () => {
     }
   }, []);
 
-  // 新增：拖拽相关状态
-  const modalRef = useRef<HTMLDivElement>(null);
-  const [isDragging, setIsDragging] = useState(false);
-  const [dragOffset, setDragOffset] = useState({ x: 0, y: 0 });
-
-  const openArticle = async (article: ArticleItem) => {
-    setIsLoading(true); // 先设置 loading
-    setMarkdownContent(""); // 清空旧内容，避免闪烁
-    setSelectedArticle(article); // 然后设置新文章
-    try {
-      const response = await fetch(article.url);
-      if (!response.ok) {
-        throw new Error("Network response was not ok");
-      }
-      const text = await response.text();
-      setMarkdownContent(text);
-    } catch (error) {
-      console.error("Fetch error:", error);
-      setMarkdownContent(
-        "# 加载失败\n\n文章内容加载出错，请检查网络或稍后重试。"
-      );
-    } finally {
-      setIsLoading(false);
-    }
-  };
-
-  const closeModal = () => {
-    setSelectedArticle(null);
-    setMarkdownContent("");
-    setIsLoading(false); // 关闭时重置 loading
-  };
-
-  // 上一章 / 下一章 - 先设置 loading 和清空内容
-  const goToPrev = () => {
-    if (!selectedArticle || currentIndex <= 0) return;
-    openArticle(articles[currentIndex - 1]);
-  };
-
-  const goToNext = () => {
-    if (!selectedArticle || currentIndex >= articles.length - 1) return;
-    openArticle(articles[currentIndex + 1]);
-  };
-
-  // 拖拽逻辑保持不变
-  const handleMouseDown = (e: React.MouseEvent<HTMLDivElement>) => {
-    if ((e.target as HTMLElement).closest(".modal-content")) return; // 内容区不触发拖拽
-    setIsDragging(true);
-    const modal = modalRef.current;
-    if (!modal) return;
-    const rect = modal.getBoundingClientRect();
-    setDragOffset({
-      x: e.clientX - rect.left,
-      y: e.clientY - rect.top,
-    });
-  };
-
-  const handleMouseMove = useCallback(
-    (e: MouseEvent) => {
-      if (!isDragging || !modalRef.current) return;
-      modalRef.current.style.left = `${e.clientX - dragOffset.x}px`;
-      modalRef.current.style.top = `${e.clientY - dragOffset.y}px`;
-      modalRef.current.style.transform = "none"; // 拖拽时取消动画居中
-    },
-    [isDragging, dragOffset]
-  );
-
-  const handleMouseUp = useCallback(() => {
-    setIsDragging(false);
-  }, []);
-
-  useEffect(() => {
-    if (isDragging) {
-      document.addEventListener("mousemove", handleMouseMove);
-      document.addEventListener("mouseup", handleMouseUp);
-      return () => {
-        document.removeEventListener("mousemove", handleMouseMove);
-        document.removeEventListener("mouseup", handleMouseUp);
-      };
-    }
-  }, [isDragging, handleMouseMove, handleMouseUp]);
-  // 重置位置（双击标题栏居中）
-  const handleDoubleClick = () => {
-    if (!modalRef.current) return;
-    modalRef.current.style.left = "50%";
-    modalRef.current.style.top = "50%";
-    modalRef.current.style.transform = "translate(-50%, -50%)";
+  const openArticle = (article: ArticleItem) => {
+    navigate(`/article/${article.id}`);
   };
 
   return (
@@ -473,221 +312,10 @@ const App: React.FC = () => {
       </main>
 
       {/* 文章列表 */}
-      <section
-        className={`articles-section ${isArticlesCollapsed ? "collapsed" : ""}`}
-      >
-        <div className="articles-header">
-          <button
-            className="toggle-btn"
-            onClick={() => setIsArticlesCollapsed(!isArticlesCollapsed)}
-            aria-label={isArticlesCollapsed ? "展开文章列表" : "收起文章列表"}
-            title={isArticlesCollapsed ? "展开文章列表" : "收起文章列表"}
-          >
-            <span
-              className={`toggle-icon ${
-                isArticlesCollapsed ? "collapsed" : ""
-              }`}
-            >
-              <svg
-                width="16"
-                height="16"
-                viewBox="0 0 16 16"
-                fill="currentColor"
-              >
-                <path d="M11.354 1.646a.5.5 0 0 1 0 .708L5.707 8l5.647 5.646a.5.5 0 0 1-.708.708l-6-6a.5.5 0 0 1 0-.708l6-6a.5.5 0 0 1 .708 0z" />
-              </svg>
-            </span>
-          </button>
-          <h2
-            className={`section-title ${
-              isArticlesCollapsed ? "hidden" : "slow"
-            }`}
-          >
-            最新文章
-          </h2>
-          <div
-            className={`articles-filters ${
-              isArticlesCollapsed ? "hidden" : "slow"
-            }`}
-          >
-            {/* 分类筛选 */}
-            <select
-              className="filter-select"
-              value={selectedCategory}
-              onChange={(e) => setSelectedCategory(e.target.value)}
-            >
-              {categories.map((category) => (
-                <option key={category} value={category}>
-                  {category}
-                </option>
-              ))}
-            </select>
+      <ArticleList onOpenArticle={openArticle} />
 
-            {/* 排序选择 */}
-            <select
-              className="filter-select"
-              value={sortOrder}
-              onChange={(e) => setSortOrder(e.target.value as "desc" | "asc")}
-            >
-              <option value="desc">最新优先</option>
-              <option value="asc">最早优先</option>
-            </select>
-          </div>
-        </div>
-        <div
-          className={`articles-list ${isArticlesCollapsed ? "collapsed" : ""}`}
-        >
-          {/* 搜索框 */}
-          <div className="articles-search">
-            <input
-              type="text"
-              className="search-input"
-              placeholder="搜索文章标题..."
-              value={searchKeyword}
-              onChange={(e) => setSearchKeyword(e.target.value)}
-            />
-          </div>
-          <div className="articles-list-scroll">
-            {filteredAndSortedArticles.length ? (
-              filteredAndSortedArticles.map((article) => (
-                <div
-                  key={article.id}
-                  onClick={() => openArticle(article)}
-                  className="article-item"
-                  style={{ cursor: "pointer" }}
-                >
-                  <div className="article-content">
-                    <h3 className="article-title">{article.title}</h3>
-                    <p className="article-excerpt">{article.excerpt}</p>
-                    <div className="article-meta">
-                      <span className="article-date">{article.date}</span>
-                      <span className="article-category">
-                        {article.category}
-                      </span>
-                      <span className="article-readtime">
-                        {article.readTime}
-                      </span>
-                    </div>
-                  </div>
-                  <div className="article-arrow">→</div>
-                </div>
-              ))
-            ) : (
-              <div className="no-articles">
-                <div className="no-articles-icon">
-                  <svg
-                    width="48"
-                    height="48"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="currentColor"
-                    strokeWidth="1.5"
-                  >
-                    <path d="M12 2L2 7v10c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V7l-10-5z" />
-                    <path d="M9 12l2 2 4-4" />
-                  </svg>
-                </div>
-                <div className="no-articles-content">
-                  <h3>暂无文章</h3>
-                  <p>精彩内容正在路上，敬请期待...</p>
-                </div>
-              </div>
-            )}
-          </div>
-        </div>
-      </section>
-
-      {/* 新增：文章查看模态框 */}
-      {selectedArticle && (
-        <div className="article-modal-wrapper">
-          <div
-            ref={modalRef}
-            className="article-modal draggable"
-            onMouseDown={handleMouseDown}
-          >
-            {/* 标题栏 */}
-            <div className="modal-header" onDoubleClick={handleDoubleClick}>
-              <h2 className="modal-title">{selectedArticle.title}</h2>
-              <button className="modal-close" onClick={closeModal}>
-                <svg
-                  width="24"
-                  height="24"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="2"
-                >
-                  <path d="M18 6L6 18" />
-                  <path d="M6 6L18 18" />
-                </svg>
-              </button>
-            </div>
-
-            <div className="modal-meta">
-              <span>{selectedArticle.date}</span> ·{" "}
-              <span>{selectedArticle.category}</span> ·{" "}
-              <span>{selectedArticle.readTime}</span>
-            </div>
-
-            {/* 上下章导航按钮 */}
-            <div className="modal-nav-enhanced">
-              <button
-                onClick={goToPrev}
-                disabled={!prevArticle || isLoading} // loading 中禁用，防止重复点击
-                className="nav-btn-enhanced prev"
-              >
-                <div className="nav-arrow">{isLoading ? "⟳" : "←"}</div>
-                <div className="nav-content">
-                  <span className="nav-label">上一章</span>
-                  <span className="nav-title-preview">
-                    {prevArticle ? prevArticle.title : "没有了"}
-                  </span>
-                </div>
-              </button>
-
-              <button
-                onClick={goToNext}
-                disabled={!nextArticle || isLoading}
-                className="nav-btn-enhanced next"
-              >
-                <div className="nav-content">
-                  <span className="nav-label">下一章</span>
-                  <span className="nav-title-preview">
-                    {nextArticle ? nextArticle.title : "没有了"}
-                  </span>
-                </div>
-                <div className="nav-arrow">{isLoading ? "⟳" : "→"}</div>
-              </button>
-            </div>
-
-            {/* 内容区：loading 时显示动画 */}
-            <div className={`modal-content ${isLoading ? "loading" : ""}`}>
-              {isLoading ? (
-                <div className="loading-spinner">加载中...</div>
-              ) : (
-                <ReactMarkdown
-                  remarkPlugins={[remarkGfm]}
-                  rehypePlugins={[
-                    rehypeRaw,
-                    rehypeSlug,
-                    [
-                      rehypeAutolinkHeadings,
-                      {
-                        behavior: "wrap",
-                        properties: {
-                          className: "heading-link",
-                        },
-                      },
-                    ],
-                  ]}
-                >
-                  {markdownContent}
-                </ReactMarkdown>
-              )}
-            </div>
-          </div>
-        </div>
-      )}
+      {/* 子路由出口 */}
+      <Outlet />
     </div>
   );
 };

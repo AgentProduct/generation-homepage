@@ -2,7 +2,7 @@
 
 ### 目录结构
 
-```
+```bash
 my-openresty
   ├── conf/
     │   └── my.conf        # Nginx 配置文件
