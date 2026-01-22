@@ -71,11 +71,27 @@ export class ArticleService {
 
   // 获取上一篇和下一篇文章
   static getAdjacentArticles(currentId: number): { prev: ArticleItem | null; next: ArticleItem | null } {
-    const articles = this.getArticles();
-    const currentIndex = articles.findIndex(article => article.id === currentId);
+    // 使用与文章列表相同的排序逻辑（按日期降序）
+    const sortedArticles = [...this.getArticles()].sort((a, b) => {
+      const dateA = new Date(a.date);
+      const dateB = new Date(b.date);
+      const timeDiff = dateB.getTime() - dateA.getTime();
+      
+      // 如果日期相同，则根据 readTime 排序
+      if (timeDiff === 0) {
+        const readTimeA = this.convertReadTimeToMinutes(a.readTime);
+        const readTimeB = this.convertReadTimeToMinutes(b.readTime);
+        return readTimeB - readTimeA;
+      }
+      
+      return timeDiff;
+    });
     
-    const prev = currentIndex > 0 ? articles[currentIndex - 1] : null;
-    const next = currentIndex < articles.length - 1 ? articles[currentIndex + 1] : null;
+    const currentIndex = sortedArticles.findIndex(article => article.id === currentId);
+    
+    // 上一篇是当前文章的前一个（日期更早），下一篇是当前文章的后一个（日期更晚）
+    const prev = currentIndex > 0 ? sortedArticles[currentIndex - 1] : null;
+    const next = currentIndex < sortedArticles.length - 1 ? sortedArticles[currentIndex + 1] : null;
     
     return { prev, next };
   }
