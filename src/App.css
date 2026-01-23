@@ -69,7 +69,8 @@ body {
   position: absolute;
   inset: 4px;
   border-radius: 50%;
-  background: #0a0a1a;
+  background: rgba(20, 20, 40, 0.9);
+  backdrop-filter: blur(20px);
   z-index: 1;
 }
 
@@ -89,8 +90,8 @@ body {
 }
 
 .avatar {
-  width: 180px;
-  height: 180px;
+  width: 185px;
+  height: 185px;
   border-radius: 50%;
   object-fit: cover;
   position: relative;
