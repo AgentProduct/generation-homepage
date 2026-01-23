@@ -234,8 +234,8 @@ const App: React.FC = () => {
       <header className="hero" style={{ position: "relative" }}>
         <div ref={starsContainerRef} className="stars-container" />
         <div className="avatar-wrapper">
+          <div className="avatar-border" />
           <img src={me.avatar} alt={me.name} className="avatar" />
-          <div className="avatar-glow" />
         </div>
 
         <h1 className="name">{me.name}</h1>

@@ -43,105 +43,197 @@ body {
   overflow: visible;
 }
 
+.avatar-border {
+  position: absolute;
+  inset: -8px;
+  border-radius: 50%;
+  z-index: 1;
+  background: conic-gradient(
+    from 0deg,
+    #6366f1,
+    #8b5cf6,
+    #a78bfa,
+    #c4b5fd,
+    #8b5cf6,
+    #6366f1
+  );
+  animation: borderSpin 4s linear infinite;
+  box-shadow: 
+    0 0 20px rgba(139, 92, 246, 0.5),
+    0 0 40px rgba(139, 92, 246, 0.3),
+    inset 0 0 20px rgba(139, 92, 246, 0.3);
+}
+
+.avatar-border::before {
+  content: '';
+  position: absolute;
+  inset: 4px;
+  border-radius: 50%;
+  background: #0a0a1a;
+  z-index: 1;
+}
+
+.avatar-border::after {
+  content: '';
+  position: absolute;
+  inset: -3px;
+  border-radius: 50%;
+  background: conic-gradient(
+    from 180deg,
+    transparent,
+    rgba(167, 139, 250, 0.8),
+    transparent
+  );
+  animation: borderGlow 2s ease-in-out infinite;
+  filter: blur(2px);
+}
+
 .avatar {
   width: 180px;
   height: 180px;
   border-radius: 50%;
   object-fit: cover;
-  border: 6px solid rgba(100, 100, 255, 0.4);
-  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.5);
   position: relative;
   z-index: 2;
-  animation: pulse 4s ease-in-out infinite;
+  background: transparent;
 }
 
-.avatar-glow {
-  position: absolute;
-  inset: -20px;
-  border-radius: 50%;
-  background: radial-gradient(circle, rgba(120, 120, 255, 0.4), transparent 70%);
-  filter: blur(20px);
-  z-index: -1;
-  animation: breathe 4s ease-in-out infinite;
-}
-
-/* 外环旋转光环 */
-.avatar-ring {
-  position: absolute;
-  inset: -40px;
-  border-radius: 50%;
-  background: linear-gradient(45deg, transparent, rgba(120, 120, 255, 0.6), transparent);
-  animation: rotate 15s linear infinite;
-  filter: blur(15px);
-  z-index: -2;
-}
-
-/* 脉冲粒子效果 */
-.avatar-particles {
-  position: absolute;
-  inset: -30px;
-  border-radius: 50%;
-  z-index: -3;
-  overflow: hidden;
-}
-
-.avatar-particles::before {
-  content: '';
-  position: absolute;
-  width: 150%;
-  height: 150%;
-  top: -25%;
-  left: -25%;
-  background: radial-gradient(circle at 50% 50%, 
-    transparent 50%, 
-    rgba(167, 139, 250, 0.3) 55%, 
-    transparent 60%);
-  animation: particleBurst 8s ease-in-out infinite;
-}
-
-/* 动画定义 */
-@keyframes breathe {
-  0%, 100% {
-    opacity: 0.6;
-    transform: scale(1);
-  }
-  50% {
-    opacity: 0.9;
-    transform: scale(1.1);
-  }
-}
-
-@keyframes pulse {
-  0%, 100% {
-    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.5),
-                0 0 0 0 rgba(167, 139, 250, 0.4);
-  }
-  50% {
-    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.5),
-                0 0 0 15px rgba(167, 139, 250, 0);
-  }
-}
-
-@keyframes rotate {
-  from {
+/* 边框旋转动画 */
+@keyframes borderSpin {
+  0% {
     transform: rotate(0deg);
   }
-  to {
+  100% {
     transform: rotate(360deg);
   }
 }
 
-
-
-@keyframes particleBurst {
+/* 边框发光波纹动画 */
+@keyframes borderGlow {
   0%, 100% {
-    transform: scale(0.8) rotate(0deg);
-    opacity: 0;
+    opacity: 0.3;
+    transform: rotate(0deg) scale(1);
   }
   50% {
-    transform: scale(1.2) rotate(180deg);
+    opacity: 0.8;
+    transform: rotate(180deg) scale(1.02);
+  }
+}
+
+/* 外层光晕环 */
+.avatar-wrapper::before {
+  content: '';
+  position: absolute;
+  inset: -15px;
+  border-radius: 50%;
+  background: conic-gradient(
+    from 0deg,
+    transparent,
+    rgba(99, 102, 241, 0.3),
+    transparent
+  );
+  animation: outerRing 6s linear infinite;
+  filter: blur(8px);
+  z-index: 0;
+}
+
+/* 外层环动画 */
+@keyframes outerRing {
+  0% {
+    transform: rotate(0deg);
+    opacity: 0.5;
+  }
+  50% {
+    opacity: 0.8;
+  }
+  100% {
+    transform: rotate(360deg);
+    opacity: 0.5;
+  }
+}
+
+/* 粒子效果容器 */
+.avatar-wrapper .particles {
+  position: absolute;
+  inset: -20px;
+  pointer-events: none;
+  z-index: 3;
+}
+
+/* 粒子点 */
+.avatar-wrapper .particle {
+  position: absolute;
+  width: 4px;
+  height: 4px;
+  background: rgba(167, 139, 250, 0.8);
+  border-radius: 50%;
+  animation: particleFloat 3s ease-in-out infinite;
+  box-shadow: 0 0 8px rgba(139, 92, 246, 0.8);
+}
+
+.avatar-wrapper .particle:nth-child(1) {
+  top: 0;
+  left: 50%;
+  animation-delay: 0s;
+}
+
+.avatar-wrapper .particle:nth-child(2) {
+  top: 15%;
+  right: 0;
+  animation-delay: 0.5s;
+}
+
+.avatar-wrapper .particle:nth-child(3) {
+  bottom: 15%;
+  right: 0;
+  animation-delay: 1s;
+}
+
+.avatar-wrapper .particle:nth-child(4) {
+  bottom: 0;
+  left: 50%;
+  animation-delay: 1.5s;
+}
+
+.avatar-wrapper .particle:nth-child(5) {
+  bottom: 15%;
+  left: 0;
+  animation-delay: 2s;
+}
+
+.avatar-wrapper .particle:nth-child(6) {
+  top: 15%;
+  left: 0;
+  animation-delay: 2.5s;
+}
+
+/* 粒子浮动动画 */
+@keyframes particleFloat {
+  0%, 100% {
+    transform: translateY(0) scale(1);
+    opacity: 0.6;
+  }
+  50% {
+    transform: translateY(-8px) scale(1.3);
     opacity: 1;
   }
+}
+
+.avatar-wrapper:hover .avatar-border {
+  animation: borderSpin 2s linear infinite;
+  box-shadow: 
+    0 0 30px rgba(139, 92, 246, 0.7),
+    0 0 60px rgba(139, 92, 246, 0.4),
+    inset 0 0 30px rgba(139, 92, 246, 0.5);
+}
+
+.avatar-wrapper:hover::before {
+  opacity: 1;
+  filter: blur(10px);
+}
+
+.avatar-wrapper:hover .particle {
+  animation-duration: 1.5s;
 }
 
 /* 星星效果容器 */
