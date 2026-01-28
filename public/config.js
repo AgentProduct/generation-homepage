@@ -257,5 +257,14 @@ const config = {
       readTime: "23:07",
       url: "/blog/linux/note3.md",
     },
+    {
+      id: 14,
+      title: "Node.js 未来趋势",
+      excerpt: "总结 Node 开发中的小知识",
+      date: "2026-01-28",
+      category: "node",
+      readTime: "16:15",
+      url: "/blog/node/note6.md",
+    },
   ],
 };
