@@ -266,5 +266,14 @@ const config = {
       readTime: "16:15",
       url: "/blog/node/note6.md",
     },
+    {
+      id: 15,
+      title: "Windows 命令行",
+      excerpt: "Windows 操作服务相关的命令",
+      date: "2026-02-25",
+      category: "command",
+      readTime: "16:48",
+      url: "/blog/command/note1.md",
+    },
   ],
 };
