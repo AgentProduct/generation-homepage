@@ -13,4 +13,4 @@
 | `netstat -ano \| findstr ":端口号/PID"`                      | 查询端口使用情况 | `taskkill /F /PID 进程号`       | 强制结束进程                                                                 |
 | `cls`                                                        | 清屏             | `ipconfig`                      | 查看IP网络信息                                                               |
 | `ping ip/域名`                                               | 测试网络连通性   | `telnet ip 端口`                | 测试端口是否打开                                                             |
-| `tasklist                               \| findstr "进程名"` | 查询进程         |                `[cmd]-Service`                 |       PowerShell-Cmd：`Get`、`Stop`、`Restart`、`Start`                                                                       |
+| `tasklist                               \| findstr "进程名"` | 查询进程         |                `[cmd]-Service 服务名`                 |       PowerShell-Cmd：`Get`、`Stop`、`Restart`、`Start`                                                                       |
