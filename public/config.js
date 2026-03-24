@@ -274,6 +274,15 @@ const config = {
       category: "command",
       readTime: "16:48",
       url: "/blog/command/note1.md",
+    },    
+    {
+      id: 16,
+      title: "数据库基础",
+      excerpt: "基于 PostgreSQL 写的例子",
+      date: "2026-03-24",
+      category: "sql",
+      readTime: "15:46",
+      url: "/blog/sql/note1.md",
     },
   ],
 };
