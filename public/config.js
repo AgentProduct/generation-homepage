@@ -284,5 +284,14 @@ const config = {
       readTime: "15:46",
       url: "/blog/sql/note1.md",
     },
+    {
+      id: 17,
+      title: "关于缓存",
+      excerpt: "了解性能优化",
+      date: "2026-03-24",
+      category: "sql",
+      readTime: "17:02",
+      url: "/blog/sql/note2.md",
+    },
   ],
 };
