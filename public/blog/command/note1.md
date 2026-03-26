@@ -14,5 +14,5 @@
 | `cls`                                                        | 清屏             | `ipconfig`                      | 查看IP网络信息                                                               |
 | `ping ip/域名`                                               | 测试网络连通性   | `telnet ip 端口`                | 测试端口是否打开                                                             |
 | `tasklist                               \| findstr "进程名"` | 查询进程         |                `[cmd]-Service 服务名`                 |       PowerShell-Cmd：`Get`、`Stop`、`Restart`、`Start`                                                                       |
-| `Expand-Archive 你的文件.zip 解压到的文件夹` | 解压zip包 | ||
+| `Expand-Archive 你的文件.zip 解压到的文件夹` | 解压zip包 | `Get-Content filePath -Wait` | 实时查看内容，`-Tail num` 限制最多展示多少行数 |
 
