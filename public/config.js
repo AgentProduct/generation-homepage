@@ -293,5 +293,14 @@ const config = {
       readTime: "17:02",
       url: "/blog/sql/note2.md",
     },
+    {
+      id: 18,
+      title: "会话管理",
+      excerpt: "掌握常用的用户登录会话管理机制",
+      date: "2026-03-26",
+      category: "auth",
+      readTime: "20:54",
+      url: "/blog/auth/note1.md",
+    },
   ],
 };
